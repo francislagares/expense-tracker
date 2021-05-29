@@ -1,8 +1,13 @@
 interface IExpense {
   id?: string;
   title: string;
-  amount: string;
+  amount: number;
   date: Date;
+}
+
+interface IDataPoints {
+  label: string;
+  value: number;
 }
 
 type ChangeInput = React.ChangeEvent<HTMLInputElement>;
