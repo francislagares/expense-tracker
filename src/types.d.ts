@@ -10,6 +10,17 @@ interface IDataPoints {
   value: number;
 }
 
+interface IUser {
+  userName: string;
+  age: string;
+  id?: string;
+}
+
+interface IError {
+  title: string;
+  message: string;
+}
+
 type ChangeInput = React.ChangeEvent<HTMLInputElement>;
 type ChangeSelect = React.ChangeEvent<HTMLSelectElement>;
 type ChangeHandler = React.ChangeEventHandler<HTMLInputElement>;
