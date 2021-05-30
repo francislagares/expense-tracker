@@ -47,7 +47,7 @@ const ExpenseForm = ({ onSaveExpenseData }: Props) => {
 
     const expenseData: IExpense = {
       title: enteredTitle,
-      amount: Number(enteredAmount),
+      amount: +enteredAmount,
       date: new Date(enteredDate),
     };
 
