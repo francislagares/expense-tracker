@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import classes from './AddUser.module.css';
 import Button from 'components/UI/Button';
@@ -9,22 +9,19 @@ interface Props {
   onAddUser: (args: IUser) => void;
 }
 
-const initlUserState = {
-  userName: '',
-  age: '',
-};
-
 const AddUser = ({ onAddUser }: Props) => {
-  const [userInput, setUserInput] = useState<IUser>(initlUserState);
+  const nameInputRef = useRef<HTMLInputElement>(null);
+  const ageInputRef = useRef<HTMLInputElement>(null);
+
   const [error, setError] = useState<IError | null>();
 
   const addUserHandler = (event: Submit) => {
     event.preventDefault();
 
-    if (
-      userInput.userName.trim().length === 0 ||
-      userInput.age.trim().length === 0
-    ) {
+    const enteredName = nameInputRef.current?.value;
+    const enteredAge = ageInputRef.current?.value;
+
+    if (enteredName?.trim().length === 0 || enteredAge?.trim().length === 0) {
       setError({
         title: 'Invalid input',
         message: 'Please enter a valid name and age (non-empty values)',
@@ -33,7 +30,7 @@ const AddUser = ({ onAddUser }: Props) => {
       return;
     }
 
-    if (+userInput.age < 1) {
+    if (enteredAge && +enteredAge < 1) {
       setError({
         title: 'Invalid age',
         message: 'Please enter a valid age (+ 0)',
@@ -43,31 +40,18 @@ const AddUser = ({ onAddUser }: Props) => {
     }
 
     const userData = {
-      userName: userInput.userName,
-      age: userInput.age,
+      userName: enteredName as string,
+      age: enteredAge as string,
       id: uuidv4(),
     };
 
     onAddUser(userData);
 
-    setUserInput({
-      userName: '',
-      age: '',
-    });
-  };
-
-  const userChangeHandler = (event: ChangeInput) => {
-    setUserInput({
-      ...userInput,
-      userName: event.target.value,
-    });
-  };
-
-  const userAgeHandler = (event: ChangeInput) => {
-    setUserInput({
-      ...userInput,
-      age: event.target.value,
-    });
+    // TypeScript checks for null before using current
+    if (nameInputRef.current !== null && ageInputRef.current !== null) {
+      nameInputRef.current.value = '';
+      ageInputRef.current.value = '';
+    }
   };
 
   const errorHandler = () => {
@@ -86,19 +70,9 @@ const AddUser = ({ onAddUser }: Props) => {
       <Card className={classes.input}>
         <form onSubmit={addUserHandler}>
           <label htmlFor='username'>User Name</label>
-          <input
-            id='username'
-            type='text'
-            value={userInput.userName}
-            onChange={userChangeHandler}
-          />
+          <input id='username' type='text' ref={nameInputRef} />
           <label htmlFor='age'>Age (Years)</label>
-          <input
-            id='age'
-            type='number'
-            value={userInput.age}
-            onChange={userAgeHandler}
-          />
+          <input id='age' type='number' ref={ageInputRef} />
           <Button type='submit'>Add User</Button>
         </form>
       </Card>

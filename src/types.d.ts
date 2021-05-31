@@ -11,8 +11,8 @@ interface IDataPoints {
 }
 
 interface IUser {
-  userName: string;
-  age: string;
+  userName: string | undefined;
+  age: string | undefined;
   id?: string;
 }
 
